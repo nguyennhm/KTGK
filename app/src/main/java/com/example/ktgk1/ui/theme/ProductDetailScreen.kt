@@ -58,7 +58,7 @@ fun ProductDetailScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    text = "$${product.price}",
+                    text = product.price,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )

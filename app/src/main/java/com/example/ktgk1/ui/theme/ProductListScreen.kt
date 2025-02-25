@@ -145,7 +145,7 @@ fun ProductListItem(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        text = "$${product.price}",
+                        text = product.price,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

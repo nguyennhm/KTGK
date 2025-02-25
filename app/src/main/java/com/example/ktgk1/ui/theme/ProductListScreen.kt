@@ -8,9 +8,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
+//import androidx.compose.material.icons.filled.Home
+//import androidx.compose.material.icons.filled.Person
+//import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,6 +60,11 @@ fun ProductListScreen(
                     NavigationItem(
                         icon = Icons.Default.Person,
                         label = "Cá nhân",
+                        onClick = { /* Xử lý sự kiện Cá nhân */ }
+                    )
+                    NavigationItem(
+                        icon = Icons.Filled.ShoppingCart,
+                        label = "Giỏ hàng",
                         onClick = { /* Xử lý sự kiện Cá nhân */ }
                     )
                 }
@@ -124,33 +130,71 @@ fun ProductListItem(
                 modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            // Bên phải: Tên, giá, dãy màu
+            // Cột chứa thông tin sản phẩm
             Column(modifier = Modifier.fillMaxWidth()) {
+                // Hàng 1: Tên sản phẩm
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Text(
-                    text = "$${product.price}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                // Hàng 2: Giá và Rating (cùng dòng)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "$${product.price}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    // Tính tổng rating (nếu có review)
+                    val overallRating = if (product.reviews.isNotEmpty()) {
+                        product.reviews.map { it.rating }.average()
+                    } else 0.0
+                    Text(
+                        text = "Rating: ${"%.1f".format(overallRating)}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(2.dp)) // Khoảng cách giữa text và icon
+                    Icon(
+                        imageVector = Icons.Filled.Star, // Icon ngôi sao
+                        contentDescription = "Rating Star",
+                        tint = Color(0xFFFFD700), // Màu vàng cho sao
+                        modifier = Modifier.size(16.dp) // Điều chỉnh kích thước icon
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
-                Row {
-                    product.colors.forEach { colorInt ->
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(end = 4.dp)
-                                .clip(CircleShape)
-                                .background(Color(colorInt))
-                        )
+                // Hàng 3: Dãy màu và Icon "Add" (cùng dòng)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Cột bên trái: Dãy màu
+                    Row(modifier = Modifier.weight(1f)) {
+                        product.colors.forEach { colorInt ->
+                            Box(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .padding(end = 4.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(colorInt))
+                            )
+                        }
                     }
+                    // Cột bên phải: Icon "Add"
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         }
     }
 }
-
 
